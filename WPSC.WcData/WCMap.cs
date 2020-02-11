@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace WPSC.WcData
 {
@@ -48,18 +49,35 @@ namespace WPSC.WcData
         public WCMap(string path)
         {
             _path = path;
-            using var wct = File.OpenRead(Path.Combine(path, "war3map.wct"));
-            _wct = new WCT(wct);
-            using var wtg = File.OpenRead(Path.Combine(path, "war3map.wtg"));
-            _wtg = new WTG(wtg);
+            using (var wct = File.OpenRead(Path.Combine(path, "war3map.wct")))
+                _wct = new WCT(wct);
+            using (var wtg = File.OpenRead(Path.Combine(path, "war3map.wtg")))
+                _wtg = new WTG(wtg);
+            using (var lua = new StreamReader(File.OpenRead(Path.Combine(path, "war3map.lua"))))
+                _scriptLeftovers = lua.ReadToEnd();
+            foreach (var scriptText in _wct.Triggers)
+                _scriptLeftovers = _scriptLeftovers.Replace($"{scriptText}\r\n", "");
         }
 
         public void Save(string? overridePath = null)
         {
-            using var wct = File.Create(Path.Combine(overridePath ?? _path, "war3map.wct"));
-            _wct.Save(wct);
-            using var wtg = File.Create(Path.Combine(overridePath ?? _path, "war3map.wtg"));
-            _wtg.Save(wtg);
+            using (var wct = File.Create(Path.Combine(overridePath ?? _path, "war3map.wct")))
+                _wct.Save(wct);
+            using (var wtg = File.Create(Path.Combine(overridePath ?? _path, "war3map.wtg")))
+                _wtg.Save(wtg);
+
+            using (var lua = File.Create(Path.Combine(overridePath ?? _path, "war3map.lua")))
+            using (var writer = new StreamWriter(lua, Encoding.UTF8, 1024, true))
+            {
+                var globalsStart = _scriptLeftovers.IndexOf("function InitGlobals()");
+                var globalsEnd = _scriptLeftovers.IndexOf("end", globalsStart);
+
+                writer.WriteLine(_scriptLeftovers[0..(globalsEnd + 3)].TrimEnd());
+                writer.WriteLine();
+                foreach (var scriptText in _wct.Triggers)
+                    writer.WriteLine(scriptText);
+                writer.Write(_scriptLeftovers[(globalsEnd + 4)..^1].TrimStart());
+            }
         }
 
         public Category? FindCategory(string name)
@@ -86,6 +104,7 @@ namespace WPSC.WcData
         private string _path;
         private WCT _wct;
         private WTG _wtg;
+        private string _scriptLeftovers;
 
         internal string GetSource(int index) => _wct.Triggers[index];
         internal void SetSource(int index, string value) => _wct.Triggers[index] = value;

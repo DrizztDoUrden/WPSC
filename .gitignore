@@ -1,6 +1,9 @@
 .vs
 bin
 obj
-VSCodeExtension/node_modules
-VSCodeExtension/out
-VSCodeExtension/package-lock.json
+*.csproj.user
+*.pubxml.user
+/VSCodeExtension/node_modules
+/VSCodeExtension/out
+/VSCodeExtension/package-lock.json
+WPSC/Properties/launchSettings.json

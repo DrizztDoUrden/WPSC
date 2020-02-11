@@ -9,28 +9,37 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPSC.Module", "WPSC.Module\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPSC.Core", "WPSC.Core\WPSC.Core.csproj", "{C400F08A-1B2A-4359-9971-AE9BA31E4526}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPSC.WcData", "WPSC.WcData\WPSC.WcData.csproj", "{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPSC.WcData", "WPSC.WcData\WPSC.WcData.csproj", "{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Publish|Any CPU = Publish|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1E16881D-C94A-465D-BBAD-FC71B52A8A0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1E16881D-C94A-465D-BBAD-FC71B52A8A0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E16881D-C94A-465D-BBAD-FC71B52A8A0C}.Publish|Any CPU.ActiveCfg = Publish|Any CPU
+		{1E16881D-C94A-465D-BBAD-FC71B52A8A0C}.Publish|Any CPU.Build.0 = Publish|Any CPU
 		{1E16881D-C94A-465D-BBAD-FC71B52A8A0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E16881D-C94A-465D-BBAD-FC71B52A8A0C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F1F174DF-2C04-4D08-9D2C-3DC5794A2923}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F1F174DF-2C04-4D08-9D2C-3DC5794A2923}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1F174DF-2C04-4D08-9D2C-3DC5794A2923}.Publish|Any CPU.ActiveCfg = Publish|Any CPU
+		{F1F174DF-2C04-4D08-9D2C-3DC5794A2923}.Publish|Any CPU.Build.0 = Publish|Any CPU
 		{F1F174DF-2C04-4D08-9D2C-3DC5794A2923}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1F174DF-2C04-4D08-9D2C-3DC5794A2923}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C400F08A-1B2A-4359-9971-AE9BA31E4526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C400F08A-1B2A-4359-9971-AE9BA31E4526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C400F08A-1B2A-4359-9971-AE9BA31E4526}.Publish|Any CPU.ActiveCfg = Publish|Any CPU
+		{C400F08A-1B2A-4359-9971-AE9BA31E4526}.Publish|Any CPU.Build.0 = Publish|Any CPU
 		{C400F08A-1B2A-4359-9971-AE9BA31E4526}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C400F08A-1B2A-4359-9971-AE9BA31E4526}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}.Publish|Any CPU.ActiveCfg = Publish|Any CPU
+		{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}.Publish|Any CPU.Build.0 = Publish|Any CPU
 		{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
