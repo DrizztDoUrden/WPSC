@@ -3,7 +3,10 @@
 	"name": "wpsc",
 	"displayName": "Warcraft P**n Scenario Compiler",
 	"description": "Tool to integrate lua source file trees into a map",
-	"version": "0.1.1",
+	"repository": {
+		"url": "https://github.com/DrizztDoUrden/WPSC"
+	},
+	"version": "0.1.2",
 	"engines": {
 		"vscode": "^1.42.0"
 	},
@@ -12,6 +15,13 @@
 	],
 	"activationEvents": [
 		"onCommand:extension.injectToMap"
+	],
+	"keywords": [
+		"Warcraft",
+		"Warcraft 3",
+		"Warcraft III",
+		"WC3",
+		"lua"
 	],
 	"main": "./out/extension.js",
 	"contributes": {

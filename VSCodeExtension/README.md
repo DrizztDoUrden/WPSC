@@ -38,9 +38,6 @@ This extension contributes the following settings:
 ### 0.1.0
 Initial release
 
-### 0.1.1
-Updated readme with dotnet link
-
 -----------------------------------------------------------------------------------------------------------
 
 **Enjoy!**
