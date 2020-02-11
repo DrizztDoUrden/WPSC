@@ -4,6 +4,7 @@ This extensions provides ability to inject custom lua code with or without a mod
 
 ## Features
 
+`ctrl+i` injects code into the map.
 DISCLAIMER: I don't give you any guaranty that nothing will ever get corrupted. I have only tested it on some of 1.32 versions of WC3. I can only tell that I have polished the stuff untill it became usable for my map.
 I can tell for sure I haven't implemented any stuff compatible with pre-1.31 WC3.
 
