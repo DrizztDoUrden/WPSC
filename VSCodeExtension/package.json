@@ -6,7 +6,7 @@
 	"repository": {
 		"url": "https://github.com/DrizztDoUrden/WPSC"
 	},
-	"version": "0.1.3",
+	"version": "0.2.5",
 	"engines": {
 		"vscode": "^1.42.0"
 	},
@@ -14,7 +14,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.injectToMap"
+		"onCommand:extension.injectToMap",
+		"workspaceContains:**/*.{w3x,w3m}/war3map.lua"
 	],
 	"keywords": [
 		"Warcraft",
@@ -29,12 +30,20 @@
 			{
 				"command": "extension.injectToMap",
 				"title": "Inject code to map"
+			},
+			{
+				"command": "extension.runWc3",
+				"title": "Run Warcraft III"
 			}
 		],
 		"keybindings": [
 			{
 				"command": "extension.injectToMap",
 				"key": "ctrl+i"
+			},
+			{
+				"command": "extension.runWc3",
+				"key": "shift+ctrl+i"
 			}
 		],
 		"configuration": [
@@ -58,6 +67,11 @@
 						"type": "string",
 						"default": "wpsc",
 						"description": "Module system to use. Leave empty for none and wpsc for built-in."
+					},
+					"wpsc.warcraftRoot": {
+						"type": "string",
+						"default": "C:\\Program Files (x86)\\Warcraft III",
+						"description": "Path to Warcraft 3."
 					}
 				}
 			}

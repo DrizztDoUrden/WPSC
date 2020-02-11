@@ -125,7 +125,7 @@ namespace WPSC.WcData
             writer.Write(FormatVersion);
             foreach (var uv in UG0) writer.Write(uv);
 
-            writer.Write(Categories.Count());
+            writer.Write(Categories.Count() + 1);
             writer.Write(0u);
             writer.Write(Triggers.Count());
             writer.Write(0u);
