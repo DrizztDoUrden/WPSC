@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WPSC": {
+      "commandName": "Project",
+      "commandLineArgs": "-source \"C:\\Users\\vasja\\Documents\\Warcraft III\\Maps\\My maps\\UHHD\" -target \"C:\\Users\\vasja\\Documents\\Warcraft III\\Maps\\My maps\\UHHD\\UHD.w3x\" -exclude UHD.w3x Helpers\\Mockery.lua"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "WPSC/1.0.0": {
+        "dependencies": {
+          "WPSC.Core": "1.0.0",
+          "WPSC.Module": "1.0.0",
+          "WPSC.WcData": "1.0.0"
+        },
+        "runtime": {
+          "WPSC.dll": {}
+        }
+      },
+      "WPSC.Core/1.0.0": {
+        "runtime": {
+          "WPSC.Core.dll": {}
+        }
+      },
+      "WPSC.Module/1.0.0": {
+        "dependencies": {
+          "WPSC.Core": "1.0.0"
+        },
+        "runtime": {
+          "WPSC.Module.dll": {}
+        }
+      },
+      "WPSC.WcData/1.0.0": {
+        "runtime": {
+          "WPSC.WcData.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "WPSC/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "WPSC.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "WPSC.Module/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "WPSC.WcData/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

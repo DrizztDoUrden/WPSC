@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29521.150
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPSC", "WPSC\WPSC.csproj", "{1E16881D-C94A-465D-BBAD-FC71B52A8A0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPSC", "WPSC\WPSC.csproj", "{1E16881D-C94A-465D-BBAD-FC71B52A8A0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPSC.Module", "WPSC.Module\WPSC.Module.csproj", "{F1F174DF-2C04-4D08-9D2C-3DC5794A2923}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPSC.Module", "WPSC.Module\WPSC.Module.csproj", "{F1F174DF-2C04-4D08-9D2C-3DC5794A2923}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPSC.Core", "WPSC.Core\WPSC.Core.csproj", "{C400F08A-1B2A-4359-9971-AE9BA31E4526}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPSC.Core", "WPSC.Core\WPSC.Core.csproj", "{C400F08A-1B2A-4359-9971-AE9BA31E4526}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPSC.WcData", "WPSC.WcData\WPSC.WcData.csproj", "{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{C400F08A-1B2A-4359-9971-AE9BA31E4526}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C400F08A-1B2A-4359-9971-AE9BA31E4526}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C400F08A-1B2A-4359-9971-AE9BA31E4526}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFCC6C9C-5643-4AB4-A9F5-26041E06BE50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

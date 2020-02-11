@@ -9,4 +9,10 @@
     <ProjectReference Include="..\WPSC.Core\WPSC.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Module.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

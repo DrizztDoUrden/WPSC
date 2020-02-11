@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WPSC.Core\WPSC.Core.csproj" />
     <ProjectReference Include="..\WPSC.Module\WPSC.Module.csproj" />
+    <ProjectReference Include="..\WPSC.WcData\WPSC.WcData.csproj" />
   </ItemGroup>
 
 </Project>
