@@ -27,6 +27,9 @@
             return table.unpack(coroutine.yield(resume, id))
         end
 
+        local oldClassicReqire = require
+        require = Require
+
         while #modules > 0 do
             local anyFound = false
             for moduleId, module in pairs(modules) do
@@ -82,9 +85,11 @@
                 break
             end
         end
+
         modules = nil
         readyModules = nil
         Require = oldRequire
+        require = oldClassicReqire
         Module = function (id, definition)
             Log("Module loading has already finished. Can't load " .. id)
         end
