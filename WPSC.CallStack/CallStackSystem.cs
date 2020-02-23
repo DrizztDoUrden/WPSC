@@ -14,7 +14,7 @@ namespace WPSC.CallStack
 
         public void ProcessFile(string fileName, TextReader source, TextWriter target)
         {
-            target.Write($"CallStack:Register(\"file root\", \"{EncodeToLuaString(fileName)}\", 0)");
+            target.WriteLine($"CallStack:Register(\"file root\", \"{EncodeToLuaString(fileName)}\", 0)");
             ProcessBlock(fileName, source, target);
         }
 
@@ -41,7 +41,9 @@ namespace WPSC.CallStack
 
             while (line != null)
             {
-                const string keyword = "function";
+                const string funcKw = "function";
+                const string thenKw = "then";
+                const string doKw = "do";
                 const string endKw = "end";
                 int kwStart, afterKw = -1;
 
@@ -58,16 +60,53 @@ namespace WPSC.CallStack
                             return (null, lineNumber);
                     }
 
-                    kwStart = line.IndexOf(keyword, searchStart);
+                    kwStart = line.IndexOf(funcKw, searchStart);
+                    var thenStart = line.IndexOf(thenKw, searchStart);
+                    var doStart = line.IndexOf(doKw, searchStart);
                     var endStart = line.IndexOf(endKw, searchStart);
                     searchStart = 0;
 
                     if (endStart != -1 && CheckKWBorders(line, endStart, endStart + endKw.Length) &&
-                        (kwStart == -1 || endStart < kwStart))
+                        (kwStart == -1 || endStart < kwStart) &&
+                        (doStart == -1 || endStart < doStart) &&
+                        (thenStart == -1 || endStart < thenStart))
                     {
                         if (!isRecurring)
                             throw new Exception($"Unexpected end at {fileName}:{line}");
                         return (line, lineNumber);
+                    }
+
+                    if (thenStart != -1 && CheckKWBorders(line, thenStart, thenStart + thenKw.Length) &&
+                        (doStart == -1 || thenStart < doStart) &&
+                        (kwStart == -1 || thenStart < kwStart))
+                    {
+                        var thenAfter = thenStart + thenKw.Length;
+                        target.Write(line[..thenAfter]);
+                        // we can add registering of every block for debug purposes
+                        line = line[thenAfter..];
+                        (line, lineNumber) = ProcessBlock(fileName, source, target, (line, lineNumber));
+                        if (line == null)
+                            throw new Exception($"Unexpected EOF at {fileName}:{lineNumber}");
+                        endStart = line.IndexOf(endKw);
+                        var afterEnd = endStart + endKw.Length;
+                        searchStart = afterEnd;
+                        continue;
+                    }
+
+                    if (doStart != -1 && CheckKWBorders(line, doStart, doStart + doKw.Length) &&
+                        (kwStart == -1 || doStart < kwStart))
+                    {
+                        var doAfter = doStart + doKw.Length;
+                        target.Write(line[..doAfter]);
+                        // we can add registering of every block for debug purposes
+                        line = line[doAfter..];
+                        (line, lineNumber) = ProcessBlock(fileName, source, target, (line, lineNumber));
+                        if (line == null)
+                            throw new Exception($"Unexpected EOF at {fileName}:{lineNumber}");
+                        endStart = line.IndexOf(endKw);
+                        var afterEnd = endStart + endKw.Length;
+                        searchStart = afterEnd;
+                        continue;
                     }
 
                     if (kwStart == -1)
@@ -78,7 +117,7 @@ namespace WPSC.CallStack
                         continue;
                     }
 
-                    afterKw = kwStart + keyword.Length;
+                    afterKw = kwStart + funcKw.Length;
                 }
                 while (kwStart == -1 || !CheckKWBorders(line, kwStart, afterKw));
 
