@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
+using WPSC.CallStack;
 using WPSC.Module;
 using WPSC.WcData;
 
@@ -51,7 +51,8 @@ namespace WPSC
 
         static void Process(Options options)
         {
-            var moduleSystem = LoadModuleSystem(options);
+            var moduleSystem = LoadSystem<IModuleSystem, ModuleSystem>(options, options.ModuleSystem, "module");
+            var callStackSystem = LoadSystem<ICallStackSystem, CallStackSystem>(options, options.CallStackSystem, "call stack");
 
             var map = new WCMap(options.TargetDirectory);
             var rootName = "WPSC_GENERATED";
@@ -59,6 +60,14 @@ namespace WPSC
 
             Category? rootCached = null;
             Category root() => rootCached ?? (rootCached = map.CreateCategory(rootName));
+
+            if (callStackSystem != null)
+            {
+                using var writer = new StringWriter();
+                callStackSystem.IncludeLibrary(writer);
+                var callStackScript = root().CreateScript("Call Stack System");
+                callStackScript.Source = writer.ToString();
+            }
 
             if (moduleSystem != null)
             {
@@ -73,70 +82,71 @@ namespace WPSC
                 .Where(f => !options.Excludes.Contains(Path.GetRelativePath(options.SourceDirectory, f)));
 
             Category? modules = null;
-            ProcessDir(options, options.SourceDirectory, moduleSystem, () => modules ?? (modules = root().CreateCategory("Modules")) );
+            ProcessDir(options, options.SourceDirectory, moduleSystem, callStackSystem, () => modules ?? (modules = root().CreateCategory("Modules")) );
 
             map.Save(options.TargetDirectory);
         }
 
-        static void ProcessDir(Options options, string dir, IModuleSystem? moduleSystem, Func<Category> category)
+        static void ProcessDir(Options options, string dir, IModuleSystem? moduleSystem, ICallStackSystem? csSystem, Func<Category> category)
         {
             foreach (var file in Directory.GetFiles(dir, "*.lua").Where(f => Path.GetFileName(f)[0] != '.' && !options.Excludes.Contains(Path.GetRelativePath(options.SourceDirectory, f))))
-                ProcessFile(options, file, moduleSystem, category());
+                ProcessFile(options, file, moduleSystem, csSystem, category());
 
             foreach (var subDir in Directory.GetDirectories(dir).Where(f => Path.GetFileName(f)[0] != '.' && !options.Excludes.Contains(Path.GetRelativePath(options.SourceDirectory, f))))
             {
                 Category? subCategory = null;
-                ProcessDir(options, subDir, moduleSystem, () => subCategory ?? (subCategory = category().CreateCategory(Path.GetFileName(subDir))));
+                ProcessDir(options, subDir, moduleSystem, csSystem, () => subCategory ?? (subCategory = category().CreateCategory(Path.GetFileName(subDir))));
             }
         }
 
-        static void ProcessFile(Options options, string file, IModuleSystem? moduleSystem, Category category)
+        static void ProcessFile(Options options, string file, IModuleSystem? moduleSystem, ICallStackSystem? csSystem, Category category)
         {
             using var writer = new StringWriter();
             var relative = Path.GetRelativePath(options.SourceDirectory, file);
             writer.WriteLine($"-- Start of file {relative}");
             if (moduleSystem != null)
                 moduleSystem.ModuleDefinitionStart(options.SourceDirectory, writer, file);
-            writer.WriteLine(File.ReadAllText(file));
+            if (csSystem != null)
+                csSystem.ProcessFile(relative, new StreamReader(File.OpenRead(file)), writer);
+            else
+                writer.WriteLine(File.ReadAllText(file));
             if (moduleSystem != null)
                 moduleSystem.ModuleDefinitionEnd(options.SourceDirectory, writer, file);
             writer.Write($"-- End of file {relative}");
             category.CreateScript(Path.GetFileName(file)[0..^4]).Source = writer.ToString();
         }
 
-        static IModuleSystem? LoadModuleSystem(Options options)
+        static TInterface? LoadSystem<TInterface, TDefault>(Options options, string name, string type)
+            where TDefault : class, TInterface, new()
+            where TInterface : class
         {
-            switch (options.ModuleSystem)
+            switch (name)
             {
                 case "wpsc":
-                    return new ModuleSystem();
+                    return new TDefault();
                 case "":
+                case "none":
                     return null;
                 default:
-                    var path = Path.Combine(options.SourceDirectory, options.ModuleSystem);
-                    if (File.Exists(path))
-                    {
-                        return Assembly.LoadFrom(path)
-                            .GetExportedTypes()
-                            .FirstOrDefault(t => t.GetInterfaces().Any(i => i == typeof(IModuleSystem)))
-                            ?.GetConstructor(Array.Empty<Type>())
-                            ?.Invoke(null) as IModuleSystem
-                            ?? throw new Exception($"Can't load {path} specified as module system.");
-                    }
-
-                    path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, options.ModuleSystem);
-                    if (File.Exists(path))
-                    {
-                        return Assembly.LoadFrom(options.ModuleSystem)
-                            .GetExportedTypes()
-                            .FirstOrDefault(t => t.GetInterfaces().Any(i => i == typeof(IModuleSystem)))
-                            ?.GetConstructor(Array.Empty<Type>())
-                            ?.Invoke(null) as IModuleSystem
-                            ?? throw new Exception($"Can't load {path} specified as module system.");
-                    }
-
-                    throw new Exception($"Can't find module system {options.ModuleSystem}.");
+                    return TryLoadSystemFrom<TInterface>(Path.Combine(options.SourceDirectory, name))
+                        ?? TryLoadSystemFrom<TInterface>(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, name))
+                        ?? throw new Exception($"Can't find {type} system {name}.");
             }
+        }
+
+        static TInterface? TryLoadSystemFrom<TInterface>(string path)
+            where TInterface : class
+        {
+            if (File.Exists(path))
+            {
+                return Assembly.LoadFrom(path)
+                    .GetExportedTypes()
+                    .FirstOrDefault(t => t.GetInterfaces().Any(i => i == typeof(TInterface)))
+                    ?.GetConstructor(Array.Empty<Type>())
+                    ?.Invoke(null) as TInterface
+                    ?? throw new Exception($"Can't load {path} specified as module system.");
+            }
+            return null;
         }
     }
 }

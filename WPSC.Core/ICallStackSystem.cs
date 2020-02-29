@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace WPSC.Core
+namespace WPSC
 {
     public interface ICallStackSystem
     {

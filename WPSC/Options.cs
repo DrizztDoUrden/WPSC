@@ -11,6 +11,7 @@ namespace WPSC
         public string SourceDirectory { get; set; } = "";
         public string TargetDirectory { get; set; } = "";
         public string ModuleSystem { get; set; } = "wpsc";
+        public string CallStackSystem { get; set; } = "wpsc";
         public string[] Excludes { get; set; } = Array.Empty<string>();
 
         public Options(in ArgsParseResult parseResult)
@@ -24,6 +25,8 @@ namespace WPSC
                 Excludes = exclude.ToArray();
             if (parseResult.Parsed.TryGetValue("Module", out var module))
                 ModuleSystem = module.Count == 0 ? "" : module[0];
+            if (parseResult.Parsed.TryGetValue("CallStack", out var cs))
+                CallStackSystem = cs.Count == 0 ? "" : cs[0];
             HasErrors = hasErrors;
             if (hasErrors)
                 return;

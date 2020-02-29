@@ -8,12 +8,21 @@
     ".NETCoreApp,Version=v3.1": {
       "WPSC/1.0.0": {
         "dependencies": {
+          "WPSC.CallStack": "1.0.0",
           "WPSC.Core": "1.0.0",
           "WPSC.Module": "1.0.0",
           "WPSC.WcData": "1.0.0"
         },
         "runtime": {
           "WPSC.dll": {}
+        }
+      },
+      "WPSC.CallStack/1.0.0": {
+        "dependencies": {
+          "WPSC.Core": "1.0.0"
+        },
+        "runtime": {
+          "WPSC.CallStack.dll": {}
         }
       },
       "WPSC.Core/1.0.0": {
@@ -38,6 +47,11 @@
   },
   "libraries": {
     "WPSC/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "WPSC.CallStack/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
