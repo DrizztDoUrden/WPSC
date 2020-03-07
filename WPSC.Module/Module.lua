@@ -1,14 +1,16 @@
 ﻿do
     local function LogFile(...)
-        local text = table.concat({...}, "\n")
-        Preload("\")\n" .. text .. "\n\\")
-        PreloadGenEnd("log.txt")
+        for _, line in pairs({...}) do
+            Preload("\")" .. line .. "\\")
+        end
+        PreloadGenEnd("Logs\\log.txt")
     end
 
     local function Log(...)
         if TestBuild then
-            local text = table.concat({...}, "\n")
-            print(text)
+            for _, line in pairs({...}) do
+                print(line)
+            end
         end
         LogFile(...)
     end
@@ -79,9 +81,8 @@
             if not anyFound then
                 local text = "Some modules not resolved:"
                 for _, module in pairs(modules) do
-                    text = text .. "\n>   " .. module.id .. " has unresolved requirement: " .. module.requirement
+                    Log(">   " .. module.id .. " has unresolved requirement: " .. module.requirement)
                 end
-                Log(text)
                 break
             end
         end
