@@ -56,6 +56,9 @@ This extension contributes the following settings:
 
 ## Release Notes
 
+### 0.2.7
+Updated module system Log function to provide more valuable output and moved its log file to Logs directory.
+
 ### 0.2.6
 Updated module system to support classic `require` as well.
 
