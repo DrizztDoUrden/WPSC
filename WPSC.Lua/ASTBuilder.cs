@@ -38,6 +38,8 @@ namespace WPSC.Lua
                     default:
                         throw new NotImplementedException($"Unimplemented syntax construct: {TokenStream.TokenWithPos(stream.Last!)}.");
                 }
+
+                await stream.Match<OperatorToken>(";");
             }
         }
 
@@ -92,11 +94,38 @@ namespace WPSC.Lua
 
         private async Task<IRValue> ParseExpression(TokenStream stream)
         {
-            var left = await TryParseAsBrackets(stream)
+            var left = await TryParseTable(stream)
+                ?? await TryParseAsBrackets(stream)
                 ?? await TryParseAsUnary(stream);
+
+            if (left == null)
+                throw new SyntaxerException($"Expected an expression at: {TokenStream.TokenWithPos(stream.Last!)}");
+
+            var suffixed = await TryParseBinarySuffix(stream, left!);
+            while (suffixed != null)
+            {
+                left = suffixed;
+                suffixed = await TryParseBinarySuffix(stream, left);
+            }
+
+            return left;
+        }
+
+        private async Task<IRValue?> TryParseTable(TokenStream stream)
+        {
+            if (!await stream.Match<OperatorToken>("{"))
+                return null;
+
+            while (!await stream.Match<OperatorToken>("}"))
+            {
+
+            }
 
             throw new NotImplementedException();
         }
+
+        private async Task<IRValue?> TryParseBinarySuffix(TokenStream stream, IRValue left)
+            => await TryParseBinaryOp(stream, left!);
 
         private async Task<IRValue?> TryParseAsBrackets(TokenStream stream)
         {
@@ -136,6 +165,70 @@ namespace WPSC.Lua
             var opToken = stream.Last as Token<string>;
             var op = unaryOperatorsMap[opToken!.Value];
             return new UnaryOperation(op, await ParseExpression(stream));
+        }
+
+        private static readonly string[] binaryOperators = new[]
+        {
+            "..",
+            "<<",
+            ">>",
+            "//",
+            "==",
+            "~=",
+            "<=",
+            ">=",
+
+            "+",
+            "-",
+            "*",
+            "/",
+            "%",
+            "^",
+            "&",
+            "|",
+            ">",
+            "<",
+        };
+
+        private static readonly string[] binaryKws = new[]
+        {
+            "and",
+            "or",
+        };
+
+        private static readonly Dictionary<string, BinaryOperator> binaryOperatorsMap = new Dictionary<string, BinaryOperator>
+        {
+            {"..", BinaryOperator.Concatenate},
+            {"<<", BinaryOperator.ShiftLeft},
+            {">>", BinaryOperator.ShiftRight},
+            {"//", BinaryOperator.FloorDivide},
+            {"==", BinaryOperator.Equals},
+            {"~=", BinaryOperator.NotEquals},
+            {"<=", BinaryOperator.LessOrEquals},
+            {">=", BinaryOperator.GreaterOrEquals},
+
+            {"+", BinaryOperator.Add},
+            {"-", BinaryOperator.Substract},
+            {"*", BinaryOperator.Multiply},
+            {"/", BinaryOperator.Divide},
+            {"%", BinaryOperator.Modulo},
+            {"^", BinaryOperator.BitwiseXor},
+            {"&", BinaryOperator.BitwiseAnd},
+            {"|", BinaryOperator.BitwiseOr},
+            {">", BinaryOperator.Greater},
+            {"<", BinaryOperator.Less},
+
+            {"and", BinaryOperator.And},
+            {"or", BinaryOperator.Or},
+        };
+
+        private async Task<IRValue?> TryParseBinaryOp(TokenStream stream, IRValue left)
+        {
+            if (!await stream.Match<OperatorToken>(binaryOperators) && !await stream.Match<KeywordToken>(binaryKws))
+                return null;
+            var opToken = stream.Last as Token<string>;
+            var op = binaryOperatorsMap[opToken!.Value];
+            return new BinaryOperation(op, left, await ParseExpression(stream));
         }
 
         private async Task<FunctionDeclaration> ParseFunctionDeclaration(TokenStream stream, bool isLocal)
@@ -239,7 +332,7 @@ namespace WPSC.Lua
             }
             Last = Current;
             Finished = !await _enumerator.MoveNextAsync();
-            return Last;
+            return Last!;
         }
 
 
